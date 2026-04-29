@@ -1,13 +1,210 @@
+# from typing import Any
+
+# def build_prompt(data: dict) -> str:
+#     age = data["age"]
+#     h = data["height_cm"]
+#     w = data["weight_kg"]
+#     goal = data["goal"]
+#     activity_level = data["activity_level"]
+#     diet_type = data["diet_type"]
+#     meals_per_day = int(data['meals_per_day'])
+
+#     # 1. BMR Calculation (Mifflin-St Jeor Equation)
+#     gender_lower = data["gender"].lower()
+#     if gender_lower == "male":
+#         bmr = (10 * w) + (6.25 * h) - (5 * age) + 5
+#     elif gender_lower == "female":
+#         bmr = (10 * w) + (6.25 * h) - (5 * age) - 161
+#     else:
+#         # For 'prefer not to say', use the average of male and female BMR
+#         bmr = (10 * w) + (6.25 * h) - (5 * age) - 78
+
+#     # 2. TDEE Calculation (Conservative Multipliers)
+#     activity_factors = {
+#         "low": 1.15,
+#         "moderate": 1.35,
+#         "active": 1.55
+#     }
+#     tdee = round(bmr * activity_factors.get(activity_level, 1.35))
+
+#     # 3. Goal Adjustment (Percentage-based for safety)
+#     if goal == "lose_weight":
+#         target_cal = int(tdee * 0.80)  # 20% deficit is the "sweet spot"
+#     elif goal == "gain_muscle":
+#         target_cal = int(tdee * 1.10)  # 10% surplus for lean gain
+#     else:
+#         target_cal = tdee
+
+#     # 4. Dynamic Safety Floor
+#     min_cal = max(1500 if gender_lower == "male" else 1200, int(22 * w))
+#     if target_cal < min_cal:
+#         target_cal = min_cal
+
+#     # 5. Protein & Macro Balancing
+#     protein_multiplier = 1.8 if goal in ["lose_weight", "gain_muscle"] else 1.2
+#     protein_target = round(w * protein_multiplier)
+
+#     # 6. Comprehensive Macro Logic for All Diet Types
+#     carbs_target = 0
+#     fat_target = 0
+    
+#     diet_lower = diet_type.lower()
+    
+#     if diet_lower == "keto":
+#         carbs_target = 30  # Strict Keto
+#         fat_cal = target_cal - (protein_target * 4) - (carbs_target * 4)
+#         fat_target = round(max(fat_cal / 9, 30))
+        
+#     elif diet_lower == "low carb":
+#         carbs_target = 100
+#         fat_cal = target_cal - (protein_target * 4) - (carbs_target * 4)
+#         fat_target = round(max(fat_cal / 9, 30))
+        
+#     elif diet_lower in ["vegan", "vegetarian"]:
+#         # Standard balance but with a reminder for plant protein
+#         fat_target = round((target_cal * 0.25) / 9) # Slightly lower fat
+#         carbs_target = round((target_cal - (protein_target * 4) - (fat_target * 9)) / 4)
+        
+#     else:
+#         # Default (None, Halal, etc.): Balanced 30% Fat
+#         fat_target = round((target_cal * 0.30) / 9)
+#         carbs_target = round((target_cal - (protein_target * 4) - (fat_target * 9)) / 4)
+
+#     # 7. Hydration (35ml per kg)
+#     hydration = round(w * 35 / 1000, 1)
+
+#     # 8. Per-meal targets for the LLM to follow
+#     protein_per_meal = round(protein_target / meals_per_day, 1)
+#     cal_per_meal = round(target_cal / meals_per_day, 1)
+
+#     # 9. Formatting constraints
+#     allergy_str = ", ".join(data.get("allergy_items", [])) or "none"
+#     conditions = data.get("medical_conditions", "none")
+#     if isinstance(conditions, list):
+#         conditions = ", ".join(conditions)
+
+#     return f"""
+# You are an EXPERT NUTRITIONIST and MATHEMATICAL DATA ARCHITECT. Your task is to generate a meal plan that is 100% accurate, consistent, and strictly adheres to the following constraints.
+
+# =====================
+# PATIENT PROFILE
+# =====================
+# - Gender: {data['gender']}
+# - Age: {age}
+# - Height: {h} cm
+# - Weight: {w} kg
+# - Goal: {goal}
+# - Activity: {activity_level}
+# - Diet Type: {diet_type}
+# - Allergies: {allergy_str}
+# - Medical Conditions: {conditions}
+
+# =====================
+# NUTRITIONAL TARGETS (DAILY)
+# =====================
+# - CALORIES: {target_cal} kcal
+# - PROTEIN: {protein_target} g
+# - CARBS: {carbs_target} g
+# - FAT: {fat_target} g
+# - MEALS: {meals_per_day}
+# - PER MEAL TARGET: ~{cal_per_meal} kcal | ~{protein_per_meal} g protein
+
+# =====================
+# STRICT OPERATIONAL RULES (ZERO TOLERANCE)
+# =====================
+# 1. PORTION UNITS: Use ONLY 'g' (grams) or 'ml' (milliliters). 
+# 2. PROHIBITED UNITS: ABSOLUTELY NO "slice", "egg", "bowl", "cup", "unit", "piece", "medium", "large", "small", "handful", "pinch", "tsp", "tbsp", or any other non-metric unit. Everything must be weighed.
+# 3. NUTRITIONAL DATA: Use realistic nutritional values per 100g/ml (USDA standard approximations). DO NOT GUESS.
+# 4. DISTRIBUTION: Distribute calories and protein relatively evenly across all {meals_per_day} meals.
+# 5. NO SUPPLEMENTS: Use only real, whole food items. No protein powders or meal replacements.
+
+# =====================
+# MANDATORY EXECUTION LOGIC
+# =====================
+# 1. CALCULATE: Determine the precise weight (g/ml) for each food item to meet the macro targets.
+# 2. SUMMATION: Mathematically sum every 'calories', 'protein_g', 'carbs_g', and 'fat_g' field across all items and meals.
+# 3. INTERNAL AUDIT & REGENERATION: If the 'total_calories' deviates from the 'DAILY CALORIES' by more than 0.5%, or protein deviates by more than 1g, you MUST RECALCULATE all portions and regenerate the plan until it falls within this tight tolerance.
+# 4. VERIFICATION: Perform a final line-by-line verification. The 'meal_totals' must be the EXACT sum of its 'items'. The 'nutrition_breakdown' must be the EXACT sum of all 'meal_totals'.
+
+# =====================
+# OUTPUT SPECIFICATION
+# =====================
+# - Return ONLY a valid JSON object. 
+# - NO preamble, NO conversational notes, NO markdown formatting, NO explanations.
+
+# {{
+#   "summary": {{
+#     "target_calories": {target_cal},
+#     "target_protein_g": {protein_target},
+#     "target_carbs_g": {carbs_target},
+#     "target_fat_g": {fat_target}
+#   }},
+#   "meals": [
+#     {{
+#       "meal_number": 1,
+#       "meal_name": "Breakfast",
+#       "suggested_time": "08:00 AM",
+#       "items": [
+#         {{
+#           "food": "Exact food name",
+#           "portion_g_ml": "Weight in g or ml (e.g. '125g')",
+#           "calories": 0,
+#           "protein_g": 0.0,
+#           "carbs_g": 0.0,
+#           "fat_g": 0.0
+#         }}
+#       ],
+#       "meal_totals": {{
+#         "calories": 0,
+#         "protein_g": 0.0,
+#         "carbs_g": 0.0,
+#         "fat_g": 0.0
+#       }}
+#     }}
+#   ],
+#   "hydration": "Drink {hydration} liters of water throughout the day.",
+#   "nutrition_breakdown": {{
+#     "total_calories": 0,
+#     "total_protein_g": 0.0,
+#     "total_carbs_g": 0.0,
+#     "total_fat_g": 0.0,
+#     "mathematical_audit": "VERIFIED_CONSISTENT"
+#   }}
+# }}
+# """
+
+
+
+# previous
+
+import re
 from typing import Any
 
 def build_prompt(data: dict) -> str:
     age = data["age"]
-    h = data["height_cm"]
-    w = data["weight_kg"]
-    goal = data["goal"]
-    activity_level = data["activity_level"]
-    diet_type = data["diet_type"]
+    # h = data["height_cm"]
+    # w = data["weight_kg"]
+    # goal = data["goal"]
+
+    # ✅ Extract height & weight from body_metrics
+    metrics = data["body_metrics"]
+
+    match = re.search(r'(\d+)\s*cm.*?(\d+)\s*kg', metrics.lower())
+    if not match:
+        raise ValueError("Invalid body_metrics format. Use '170cm 70kg'")
+
+    h = int(match.group(1))
+    w = int(match.group(2))
+    goal = data["goal"].lower().replace(" ", "_")
+    activity_level = data["activity_level"].lower()
+    diet_type = data["diet_type"].lower()
+    # activity_level = data["activity_level"]
+    # diet_type = data["diet_type"]
     meals_per_day = int(data['meals_per_day'])
+    if meals_per_day <= 0:
+       raise ValueError("meals_per_day must be greater than 0")
+
+
 
     # 1. BMR Calculation (Mifflin-St Jeor Equation)
     gender_lower = data["gender"].lower()
@@ -78,7 +275,10 @@ def build_prompt(data: dict) -> str:
     cal_per_meal = round(target_cal / meals_per_day, 1)
 
     # 9. Formatting constraints
-    allergy_str = ", ".join(data.get("allergy_items", [])) or "none"
+    # allergy_str = ", ".join(data.get("allergy_items", [])) or "none"
+
+    allergy_items = data.get("allergy_items", "")
+    allergy_str = allergy_items if allergy_items else "none"
     conditions = data.get("medical_conditions", "none")
     if isinstance(conditions, list):
         conditions = ", ".join(conditions)
@@ -108,7 +308,7 @@ NUTRITIONAL TARGETS (STRICT)
 - TOTAL DAILY PROTEIN: {protein_target}g (Tolerance: ±5g)
 - TOTAL DAILY CARBS: {carbs_target}g (Tolerance: ±10g)
 - TOTAL DAILY FAT: {fat_target}g (Tolerance: ±10g)
-- MEALS PER DAY: {meals_per_day}
+- MEALS PER DAY: {meals_per_day} (You MUST generate EXACTLY {meals_per_day} meals)
 - TARGET PER MEAL: ~{cal_per_meal} kcal and ~{protein_per_meal}g protein.
 
 =====================
@@ -123,9 +323,10 @@ DIETARY CONSTRAINTS
 EXECUTION STEPS
 =====================
 1. NUTRITION AUDIT: For every food item you select, calculate its calories and protein based on the portion size.
-2. SUMMATION: Sum the calories and protein for all items in a meal to get 'meal_totals'.
-3. FINAL VALIDATION: Sum all 'meal_totals'. If they do not match the Daily Targets ({target_cal} kcal, {protein_target}g protein, {carbs_target}g carbs, {fat_target}g fat), adjust the portions until they do.
-4. JSON GENERATION: Output the final plan in the exact JSON format below.
+2. MEAL COUNT: You MUST generate exactly {meals_per_day} meals. If {meals_per_day} is 4, generate Meal 1, 2, 3, and 4.
+3. SUMMATION: Sum the calories and protein for all items in a meal to get 'meal_totals'.
+4. FINAL VALIDATION: Sum all 'meal_totals' from all {meals_per_day} meals. If they do not match the Daily Targets ({target_cal} kcal, {protein_target}g protein, {carbs_target}g carbs, {fat_target}g fat), adjust the portions until they do.
+5. JSON GENERATION: Output the final plan in the exact JSON format below.
 
 =====================
 OUTPUT FORMAT (JSON ONLY)
@@ -133,7 +334,7 @@ OUTPUT FORMAT (JSON ONLY)
 - Output ONLY the JSON object. 
 - NO markdown code blocks. 
 - NO preamble or postscript.
-- Ensure all numbers are integers or floats as shown.
+- Ensure the "meals" array contains EXACTLY {meals_per_day} meal objects.
 
 {{
   "summary": {{
@@ -150,9 +351,9 @@ OUTPUT FORMAT (JSON ONLY)
       "suggested_time": "08:00 AM",
       "items": [
         {{
-          "food": "Exact food name (e.g. Grilled Chicken Breast)",
-          "portion": "Exact weight/size (e.g. 150g or 2 large eggs)",
-          "notes": "Why this food was chosen",
+          "food": "Exact food name",
+          "portion": "Weight/size (e.g. 150g)",
+          "notes": "Why chosen",
           "calories": 250,
           "protein_g": 35,
           "carbs_g": 0,
@@ -165,7 +366,8 @@ OUTPUT FORMAT (JSON ONLY)
         "carbs_g": 0,
         "fat_g": 12
       }}
-    }}
+    }},
+    "... (Repeat for exactly {meals_per_day} meals total)"
   ],
   "hydration": "Drink {hydration} liters of water throughout the day.",
   "nutrition_breakdown": {{
@@ -181,5 +383,5 @@ OUTPUT FORMAT (JSON ONLY)
   }}
 }}
 
-(Note: In the 'nutrition_breakdown', you MUST sum the calories and protein from all meals you generated and provide those ACTUAL totals. Then, calculate the difference from the targets provided above.)
+(Note: In the 'nutrition_breakdown', you MUST sum the calories and protein from ALL {meals_per_day} meals you generated and provide those ACTUAL totals. Then, calculate the difference from the targets provided above.)
 """
