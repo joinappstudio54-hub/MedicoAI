@@ -1,4 +1,4 @@
-#AI Food Image Analyzer (Gemini Vision + FastAPI)
+AI Food Image Analyzer (Gemini Vision + FastAPI)
 
 This project is a FastAPI-based backend that uses Google Gemini Vision models to detect food items from images and return structured nutritional information in JSON format.
 
