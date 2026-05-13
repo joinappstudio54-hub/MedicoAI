@@ -1,0 +1,13 @@
+
+fastapi
+uvicorn[standard]
+python-multipart
+google-genai
+pydantic
+pydantic-settings
+python-dotenv
+pillow
+sqlalchemy[asyncio]
+asyncpg
+scipy
+numpy
