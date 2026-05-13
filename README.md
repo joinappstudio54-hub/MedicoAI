@@ -118,3 +118,4 @@ Then access it from another PC using your host machine IP, for example:
 - The app uses Google Gemini to analyze image content and expects valid JSON in the response.
 - If Gemini returns malformed output, the app defaults to `is_food: false`.
 - Duplicate detection is supported via `image_hash` saved in food item records.
+- This branch is intended for API testing and validation.
