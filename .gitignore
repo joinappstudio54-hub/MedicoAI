@@ -5,7 +5,7 @@ __pycache__/
 *.pyc
 
 # Environment secrets
-.env
+# .env
 
 # Large dataset files (CSVs)
 *.csv
