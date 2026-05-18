@@ -1,0 +1,16 @@
+# Python environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Environment secrets
+.env
+
+# Large dataset files (CSVs)
+*.csv
+1stdata/
+
+# IDE files
+.vscode/
+.idea/
