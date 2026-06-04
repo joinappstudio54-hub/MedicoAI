@@ -1,14 +1,5 @@
 [
   {
-    "title": "",
-    "image": null,
-    "image_path": null,
-    "ingredients": [],
-    "instructions": null,
-    "nutrition": {},
-    "source_url": "https://www.edamam.com/results/recipe/?recipe="
-  },
-  {
     "title": "10-minute couscous salad",
     "image": "https://edamam-product-images.s3.amazonaws.com/web-img/861/861e4b15f6b13a367a342f4f8017a3ee.jpg?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEoaCXVzLWVhc3QtMSJHMEUCIHSnQYIwaUhTN%2FsIj5PDWuVgkTfsQFhgmtgEMQhjQnIOAiEAnOAizKBqZAUhFYXEH7%2FtfVva%2Fuyo02nhYwob7%2B5wBF8quAUIEhAAGgwxODcwMTcxNTA5ODYiDCXejcciSOuQKoddjyqVBXorclXtw1mjbxyIczbsUfiSafwGr7d%2BCyajBvO3OmULC7Dvzzp0xlQWEMGBfZ6RpyPOAcHLUrG5vs6etnLnBv9DLKjGr7DHxaT%2BgQXPNFcof5lPqvyDY7S4Xei8Xb1pveRdBBZx%2FyMu81joVTKv1gVMSjgmYi3IdOx47YH5N6qKTvF0sYDYOvCNQ9swKXfy4c8%2BIHwHfKm75kfjiiN2GnMueAtVGz0AJa6%2FwVGOYnNAFtu8tr6mxgoDpPrHz3%2F9YE8QirKa52RSkS7PqKD9JikX5iFDznNVCrBsKn1nbTHCkhXPCiAgPDxxnLhGoZ2ku3T3UBudb0v23HwpWD0pg8Un%2FJkW9UyywfFigmvqo5omarKyd3AVCZCupfDS8cUEnjxnNKd%2FtyAJxHvure5PrdZGMTkLuy8OUMYcWIMdqnXfCr0K7OwmT246wNBxV5R1c24S3%2FvwY%2Bdetu2M9fX%2B9M2ozNPwjNvo%2BcFiDS7uHCUM9OKOkvQjio8uw%2Bjmg5rXpTFjEgh6mVHxY1Ne2VBiRqoTRlRqc3jKeL0a8Zdrkd1Yw6O%2B3Di1ZHZo8Rp0P1lgZNPpG9AdHVuoM4cdJsXzTV49QcpCRKkgn%2BGe3ha2ZQJIj7Fp9mE9nd18W0UR9A59VQ8EtPg1ox8YllvvT6W2o8qIkEhkhF7BWt7mIZ%2FaYMvcPKiiQP3%2BbHNP1hQheGUgd0wRdwn52U0NiXq9PMMEZSRSoqBN6SmOTmVvx8B%2F0w3He0vYXhcQRWVk3u0DrEBMcsUh1JfHug3ustaW%2BFtoc2VCfWFWlVurQQ86HnPWZdhFGSo0BkaU%2BKtIFfg56qrv%2BN9YBxy1L5yo073m7ovc%2Fb8LgBMqqdST6ck8f4ctEMXJWkF9JCQwoNy%2B0AY6sQHFcjEvu5qV6oU%2BsTwC0nIK2yvZQHqjXMT3AYGY%2FDjSdhgeR9iMJN4DsiIOIcxfPSKIAV0W5xh7bW0xFesYj1wD5A%2FR%2B4uklwpt43Qr1HBOPLYtfZ1LTxp7Sqw4WCxXHTkCQNdSPWgbtg0i5y1Q0ThZqbPATwOcWKa5y0frKD4b5WUtgh89tT2LU0l0efcCrPGodM9AoThGicmMV3Y29g54lcBhwQIP9eCTQo1ecsW%2BVX0%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260522T060743Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIASXCYXIIFDKW54RDR%2F20260522%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=3600&X-Amz-Signature=e620769722b782c6f7103cec68ffd15e8236bde6927778b8f143e98f15093a8a",
     "image_path": "recipe_images\\10_minute_couscous_salad.jpg",
