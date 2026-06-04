@@ -1,0 +1,9 @@
+selenium
+webdriver-manager
+beautifulsoup4
+lxml
+pandas
+curl-cffi
+fake-useragent
+tenacity
+tqdm
