@@ -1,4 +1,4 @@
-# PDF Scrap Recipe Scraper
+# Recipe Scraper
 
 This repository contains a recipe scraping toolkit for collecting recipe URLs and scraping recipe details from Edamam search results.
 
